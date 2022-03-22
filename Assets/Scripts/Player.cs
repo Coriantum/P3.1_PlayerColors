@@ -27,10 +27,6 @@ public class Player : MonoBehaviour
     public GameObject player;
 
 
-    //Adquirimos una nueva posicion aleatoria
-    Vector3 randomPosition;
-
-
     Renderer rend;
 
 
@@ -39,13 +35,9 @@ public class Player : MonoBehaviour
     {
         //players = new List<GameObject>(Resources.LoadAll<GameObject>("Player"));
         
-        randomPosition = new Vector3(Random.Range(-3f, 3f),1f, Random.Range(-3f,3f));
 
-        // Mientras hayan menos de 6 players,ejecutará el metodo CreatePlayer cada 5 seg
-        if(players.Count < 6){
-            Invoke("CreatePlayer", 5f);
-            //CreatePlayer();
-        }
+        // Mientras hayan menos de 6 players,ejecutará el metodo CreatePlayer cada 5 seg a partir de una corrutina
+        StartCoroutine(SpawnPlayerTime());
         
     }
 
@@ -55,43 +47,45 @@ public class Player : MonoBehaviour
         
     }
 
+    // Creacion de corrutina que se encargue de los segundos que pasan de un spawn.
+    IEnumerator SpawnPlayerTime(){
+        
+        // Crea el objeto
+        for(int i = 0; i < 6; i++){
+            CreatePlayer(player);
+            
+            yield return new WaitForSeconds(5f);
+
+            
+        }
+        
+    }
 
 
+    // Metodo que cree o genere el player, genere una posicion y genere un color aleatorio
+    public void CreatePlayer(GameObject player){ 
+        
+            Vector3 randomPosition = new Vector3(Random.Range(-3f, 3f),1f, Random.Range(-3f,3f));
 
-    //Metodo que mueva el player
-    public void Move(){
-        //Adquirimos una nueva posicion aleatoriamente
-        //Vector3 randomPosition = new Vector3(Random.Range(-3f, 3f),1f, Random.Range(-3f,3f));
-
-        // La posicion generada será según la randomPosition
-        transform.position = randomPosition;
+            //Instancia nuevo objeto
+            GameObject playerGameobject = Instantiate(player, randomPosition, Quaternion.identity);
+            players.Add(playerGameobject);
+            
+            // Asignamos color
+            GetRandomColor(playerGameobject);        
 
     }
 
     // Metodo encargado de la generacion aleatoria de colores y asignacion
-    public void GetRandomColor(){
+    public void GetRandomColor(GameObject playerColor){
         Color randomColor = colores[Random.Range(0,colores.Count)];
-        rend.material.color = randomColor;
+        Debug.Log(randomColor);
+        playerColor.GetComponent<Renderer>().material.SetColor("_Color", randomColor);
 
+        if(colores.Contains(randomColor)){
+            colores.Remove(randomColor);
+        }     
     }
-
-    // Metodo que cree o genere el player
-    public void CreatePlayer(){
-        
-        for(int i =0; i< 6; i++){
-            //Instancia nuevo objeto
-            GameObject playerGameobject = Instantiate(player, randomPosition, Quaternion.identity);
-            players[i] = playerGameobject;
-            Move();
-            
-            // Asignamos color
-            GetRandomColor();
-
-            
-        }
-    }
-
-    
     
     
 }
