@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     };
 
     // Crear otra lista "contenedor" o de "Colores ocupados"
-    public List<Color> coloresOcupados = new List<Color>();
+    // public List<Color> coloresOcupados = new List<Color>();
 
     public List<GameObject> players = new List<GameObject>();
 
@@ -55,7 +55,6 @@ public class Player : MonoBehaviour
             CreatePlayer(player);
             
             yield return new WaitForSeconds(5f);
-
             
         }
         
@@ -78,13 +77,16 @@ public class Player : MonoBehaviour
 
     // Metodo encargado de la generacion aleatoria de colores y asignacion
     public void GetRandomColor(GameObject playerColor){
-        Color randomColor = colores[Random.Range(0,colores.Count)];
-        Debug.Log(randomColor);
-        playerColor.GetComponent<Renderer>().material.SetColor("_Color", randomColor);
 
-        if(colores.Contains(randomColor)){
-            colores.Remove(randomColor);
-        }     
+        int colorPos = Random.Range(0, colores.Count);
+        Color randomColor = colores[Random.Range(0,colores.Count)];
+        
+        // Asigno color
+        playerColor.GetComponent<Renderer>().material.color = colores[colorPos];
+
+        // Borro en la lista dicho color elegido aleatoriamente de la lista para que no se repita
+        colores.RemoveAt(colorPos);
+
     }
     
     
