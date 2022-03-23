@@ -79,7 +79,6 @@ public class Player : MonoBehaviour
     public void GetRandomColor(GameObject playerColor){
 
         int colorPos = Random.Range(0, colores.Count);
-        Color randomColor = colores[Random.Range(0,colores.Count)];
         
         // Asigno color
         playerColor.GetComponent<Renderer>().material.color = colores[colorPos];
